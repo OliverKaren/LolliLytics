@@ -82,18 +82,19 @@ npm run dev
 
 Copy `.env.example` to `.env` and configure:
 
-| Variable | Description |
-|---|---|
+| Variable       | Description             |
+| -------------- | ----------------------- |
 | `RIOT_API_KEY` | Your Riot Games API key |
-| `JWT_SECRET` | Secret for signing JWTs |
-| `DB_*` | PostgreSQL connection |
-| `REDIS_*` | Redis connection |
+| `JWT_SECRET`   | Secret for signing JWTs |
+| `DB_*`         | PostgreSQL connection   |
+| `REDIS_*`      | Redis connection        |
 
 ---
 
 ## 📦 Tech Stack
 
 ### Backend
+
 - **NestJS** — Modular Node.js framework
 - **TypeORM** — Database ORM
 - **PostgreSQL** — Primary database
@@ -102,6 +103,7 @@ Copy `.env.example` to `.env` and configure:
 - **Swagger** — Auto-generated API docs
 
 ### Frontend
+
 - **React 18** — UI
 - **Vite** — Build tool
 - **TailwindCSS** — Styling
@@ -115,6 +117,7 @@ Copy `.env.example` to `.env` and configure:
 ## 🧠 Feature Modules
 
 ### 1. Draft Intelligence (`/draft`)
+
 - Champion winrate by Patch / 30 days / Season
 - Matchup difficulty rating (Easy / Medium / Hard)
 - Team composition synergy score
@@ -122,12 +125,14 @@ Copy `.env.example` to `.env` and configure:
 - Draft hints: High Confidence / Risky / Counter Risk
 
 ### 2. Performance Benchmarking (`/performance`)
+
 - Compare stats vs Master / GM / Challenger averages
 - Percentile rankings (KDA, CS, Damage, Vision)
 - Lane Phase Score and Objective Impact score
 - Automatic strength and weakness detection
 
 ### 3. Tilt & Consistency Detection (`/tilt`)
+
 - Loss streak detection with performance drop analysis
 - Session fatigue detection (same-day performance decay)
 - Time-of-day win rate analysis
@@ -135,6 +140,7 @@ Copy `.env.example` to `.env` and configure:
 - Break and champion/role stability recommendations
 
 ### 4. Smurf / Hidden MMR Detection (`/smurf`)
+
 - Rank progression outlier detection
 - Win rate vs rank average comparison
 - Mechanical outlier stats (KDA, CS/min)
@@ -163,6 +169,7 @@ cd apps/backend && npm run migration:revert
 Swagger UI is available at `http://localhost:3001/api/docs` in development.
 
 Key endpoints:
+
 - `POST /api/v1/auth/register` — Create account
 - `POST /api/v1/auth/login` — Get JWT
 - `POST /api/v1/draft-intelligence/analyze-draft` — Full draft analysis
@@ -181,11 +188,10 @@ Key endpoints:
 - [ ] Implement WebSocket for live draft mode
 - [ ] Add player search by Riot ID (gameName#tagLine)
 - [ ] Role detection and champion pool management
-- [ ] Export reports as PDF
 
 ---
 
 ## 🛡️ Notes
 
-This app uses the **Riot Games API** under their [Developer Terms](https://developer.riotgames.com/terms). 
+This app uses the **Riot Games API** under their [Developer Terms](https://developer.riotgames.com/terms).
 Riot production API keys require approval for public/commercial use.
