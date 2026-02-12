@@ -2,10 +2,11 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
-import { RiotApiService } from '../riot-api/riot-api.service';
+import { RiotApiService, RoutingRegion } from '../riot-api/riot-api.service';
+
 
 // Platform → routing region map for Account API (Riot ID lookup)
-export const PLATFORM_TO_REGION: Record<string, string> = {
+export const PLATFORM_TO_REGION: Record<string, RoutingRegion> = {
   EUW1:  'europe',
   EUN1:  'europe',
   TR1:   'europe',

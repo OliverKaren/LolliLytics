@@ -2,6 +2,7 @@ import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
+import { AxiosResponse } from 'axios';
 
 // Routing regions for Account API
 type RoutingRegion = 'europe' | 'americas' | 'asia' | 'sea';
@@ -24,10 +25,11 @@ export class RiotApiService {
 
   private async get<T>(url: string): Promise<T> {
     try {
-      const { data } = await firstValueFrom(
-        this.http.get<T>(url, { headers: this.headers }),
-      );
-      return data;
+      const response = await firstValueFrom(
+      this.http.get<T>(url, { headers: this.headers }),
+    ) as AxiosResponse<T>;
+    return response.data;
+    
     } catch (err) {
       const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
       const message = err.response?.data?.status?.message || err.message;
