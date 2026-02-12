@@ -43,3 +43,6 @@ coverage/
 
 # Docker
 docker-compose.override.yml
+
+# ReadME Ignore
+README.md
