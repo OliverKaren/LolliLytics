@@ -4,20 +4,20 @@ import { Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
 import { RiotApiService, RoutingRegion } from '../riot-api/riot-api.service';
 
-
-// Platform → routing region map for Account API (Riot ID lookup)
+// Platform → routing region map — values are typed as RoutingRegion
+// so TypeScript accepts them directly in getAccountByRiotId()
 export const PLATFORM_TO_REGION: Record<string, RoutingRegion> = {
-  EUW1:  'europe',
-  EUN1:  'europe',
-  TR1:   'europe',
-  RU:    'europe',
-  NA1:   'americas',
-  BR1:   'americas',
-  LA1:   'americas',
-  LA2:   'americas',
-  KR:    'asia',
-  JP1:   'asia',
-  OC1:   'sea',
+  EUW1: 'europe',
+  EUN1: 'europe',
+  TR1:  'europe',
+  RU:   'europe',
+  NA1:  'americas',
+  BR1:  'americas',
+  LA1:  'americas',
+  LA2:  'americas',
+  KR:   'asia',
+  JP1:  'asia',
+  OC1:  'sea',
 };
 
 export const PLATFORMS = Object.keys(PLATFORM_TO_REGION);
@@ -27,7 +27,7 @@ export interface LinkedRiotAccount {
   gameName: string;
   tagLine: string;
   platform: string;
-  region: string;
+  region: RoutingRegion;
   summonerName: string;
 }
 
@@ -77,19 +77,17 @@ export class UsersService {
     const account = await this.riotApi.getAccountByRiotId(
       gameName,
       tagLine,
-      region,
+      region, // now typed as RoutingRegion — no more TS2345
     );
 
-    // Fetch summoner details for the platform-specific display name
-    let summonerName = `${gameName}#${tagLine}`;
+    // Fetch summoner details (optional — Riot ID is sufficient)
     try {
-      const summoner = await this.riotApi.getSummonerByPuuid(
+      await this.riotApi.getSummonerByPuuid(
         account.puuid,
         upperPlatform.toLowerCase(),
       );
-      summonerName = summoner.name ?? summonerName;
     } catch {
-      // Summoner endpoint is optional – Riot ID is enough
+      // Summoner endpoint is optional
     }
 
     await this.userRepo.update(userId, {

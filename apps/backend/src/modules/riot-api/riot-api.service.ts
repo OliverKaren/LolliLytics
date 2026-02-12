@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 
-// Routing regions for Account API
-type RoutingRegion = 'europe' | 'americas' | 'asia' | 'sea';
+// Exported so users.service can use it for the type-safe PLATFORM_TO_REGION map
+export type RoutingRegion = 'europe' | 'americas' | 'asia' | 'sea';
 
 @Injectable()
 export class RiotApiService {
@@ -23,13 +23,14 @@ export class RiotApiService {
     return { 'X-Riot-Token': this.apiKey };
   }
 
+  // Fix: explicitly type the Observable as AxiosResponse<T> so TypeScript
+  // correctly resolves the response data in the destructuring.
   private async get<T>(url: string): Promise<T> {
     try {
       const response = await firstValueFrom(
-      this.http.get<T>(url, { headers: this.headers }),
-    ) as AxiosResponse<T>;
-    return response.data;
-    
+        this.http.get<T>(url, { headers: this.headers }),
+      ) as AxiosResponse<T>;
+      return response.data;
     } catch (err) {
       const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
       const message = err.response?.data?.status?.message || err.message;
@@ -47,10 +48,6 @@ export class RiotApiService {
   }
 
   // ── Account API ────────────────────────────────────────────────────────
-  /**
-   * Look up an account by Riot ID (gameName + tagLine).
-   * @param region - routing region: europe | americas | asia | sea
-   */
   async getAccountByRiotId(
     gameName: string,
     tagLine: string,
@@ -68,7 +65,6 @@ export class RiotApiService {
   }
 
   // ── Summoner API ───────────────────────────────────────────────────────
-  /** @param platform - e.g. 'euw1', 'na1', 'kr' */
   async getSummonerByPuuid(puuid: string, platform: string) {
     const url = `${this.platformUrl(platform)}/lol/summoner/v4/summoners/by-puuid/${puuid}`;
     return this.get<any>(url);
@@ -87,7 +83,7 @@ export class RiotApiService {
     options: {
       count?: number;
       start?: number;
-      queue?: number; // 420 = Ranked Solo/Duo
+      queue?: number;
       type?: string;
     } = {},
   ): Promise<string[]> {
