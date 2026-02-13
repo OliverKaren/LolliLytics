@@ -5,12 +5,17 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach JWT token from localStorage
+// ── Request-Interceptor: JWT an jeden Request anhängen ─────────────────
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// ── Response-Interceptor: bei echtem Auth-Fehler ausloggen ─────────────
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Nur ausloggen wenn es ein Auth-Endpunkt-Problem ist,
-    // NICHT bei 401 von Riot API (z.B. /users/me/riot-account)
     const url = error.config?.url ?? '';
     const isAuthError =
       error.response?.status === 401 &&

@@ -1,21 +1,40 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsArray, IsOptional, ArrayNotEmpty } from 'class-validator';
 import { DraftIntelligenceService } from './draft-intelligence.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 class AnalyzePickDto {
+  @IsString() @IsNotEmpty()
   puuid: string;
+
+  @IsString() @IsNotEmpty()
   championName: string;
+
+  @IsOptional() @IsString()
   enemyChampionName?: string;
+
+  @IsOptional() @IsArray() @IsString({ each: true })
   allyChampions?: string[];
+
+  @IsOptional() @IsString()
   patch?: string;
 }
 
 class AnalyzeDraftDto {
+  @IsString() @IsNotEmpty()
   puuid: string;
+
+  @IsString() @IsNotEmpty()
   myChampion: string;
+
+  @IsArray() @IsString({ each: true })
   allyChampions: string[];
+
+  @IsArray() @IsString({ each: true })
   enemyChampions: string[];
+
+  @IsOptional() @IsString()
   patch?: string;
 }
 
